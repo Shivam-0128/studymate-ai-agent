@@ -2,11 +2,11 @@
 
 ## Updated Description of the System Based on Implementation Progress
 
-The system is now implemented as a working Python-based AI study assistant called **StudyMate AI Agent**. The main goal of the system is to help students revise study notes more easily by converting a normal `.txt` study notes file into a structured Markdown study report.
+The system is now implemented as a working Python-based AI study assistant called **StudyMate AI Agent**. The goal of the system is to help students revise study notes more easily by converting a normal `.txt` notes file into a structured Markdown study report.
 
-The system currently works as a local command-line application. The user provides the path to a `.txt` file. The agent reads the file, analyzes the text, sends the content to the Gemini API, receives AI-generated learning material, and saves the final result inside the `reports/` folder.
+The system currently works as a local command-line application. The user provides the path to a `.txt` file. The agent reads the file, analyzes the text, sends the content to the Gemini API, receives AI-generated learning material, and saves the final report inside the `reports/` folder.
 
-During implementation, the AI provider was changed from the originally planned Claude API to the Gemini API. The main system idea stayed the same, but the AI client module was implemented as `gemini_client.py`.
+During implementation, the AI provider was changed from the originally planned Claude API to the Gemini API. The project goal stayed the same, but the AI client module was implemented as `gemini_client.py`.
 
 The current workflow is:
 
@@ -19,7 +19,7 @@ The current workflow is:
 7. The report writer tool saves the final result as a Markdown report.
 8. The user receives the path to the generated report.
 
-The system has already been tested with a sample notes file. It successfully generated a report and all automated tests passed.
+The system has been tested with a sample notes file. It successfully generated a report, and all automated tests passed.
 
 ## Refined List of Programming Concepts Actually Used
 
@@ -108,18 +108,110 @@ String processing is used to analyze the study notes.
 
 The text analyzer splits text into words, sentences, and paragraphs. It also extracts keywords by removing common stop words.
 
-String formatting is also used to build the final Markdown report.
+String formatting is used to build the final Markdown report.
 
 ### Lists and Dictionaries
 
 Lists are used to store keywords.
 
-A dictionary is used to store text analysis results, such as:
+A dictionary is used to store text analysis results, such as word count, sentence count, paragraph count, keywords, average words per sentence, and difficulty level.
 
-```python
-{
-    "word_count": 77,
-    "sentence_count": 6,
-    "paragraph_count": 4,
-    "difficulty": "Medium"
-}
+This makes the data easier to pass between the tools, agent, and report writer.
+
+### Error Handling
+
+The system handles common errors, including:
+
+- missing file,
+- empty file,
+- unsupported file type,
+- missing Gemini API key,
+- failed program execution.
+
+The main program uses `try` and `except` so that errors are shown clearly instead of crashing the application.
+
+### Environment Variables
+
+The Gemini API key is stored in a `.env` file.
+
+The `.env.example` file shows the required configuration format without exposing the real API key.
+
+The `.gitignore` file prevents `.env` from being uploaded to GitHub.
+
+### API Integration
+
+The system uses the Gemini API through the `google-genai` Python package.
+
+The Gemini API is used for tasks that require language understanding and generation:
+
+- creating a summary,
+- generating quiz questions,
+- producing an answer key,
+- detecting hard and easy concepts.
+
+### Automated Testing
+
+The project uses `pytest`.
+
+Tests currently check:
+
+- successful file reading,
+- missing file handling,
+- empty file handling,
+- unsupported file type handling,
+- text analysis,
+- report generation,
+- full agent workflow using a mock AI client.
+
+The latest test result was:
+
+8 passed
+
+### Git and GitHub
+
+Git is used to track the development progress of the project.
+
+GitHub is used to store the project repository online.
+
+Current commits include:
+
+- local tools and tests,
+- Gemini workflow and working report generation.
+
+## Description of How Tools Are Integrated into the System
+
+The tools are integrated through the `StudyMateAgent` class.
+
+The agent does not perform all tasks directly. Instead, it coordinates different tools.
+
+The integration flow is:
+
+1. `main.py` receives the file path from the command line.
+2. `main.py` creates a `StudyMateAgent` object.
+3. `StudyMateAgent` calls `read_file()` from `file_reader.py`.
+4. `StudyMateAgent` sends the file content to `analyze_text()` from `text_analyzer.py`.
+5. `StudyMateAgent` calls the `GeminiClient` methods:
+   - `generate_summary()`
+   - `generate_quiz()`
+   - `detect_concepts()`
+6. `StudyMateAgent` sends all results to `save_report()` from `report_writer.py`.
+7. `save_report()` creates the Markdown file and returns the report path.
+8. `main.py` displays the result to the user.
+
+This design makes the system clear and extendable. More tools can be added later, such as an interactive quiz mode, PDF reader, or web interface.
+
+## Current Status
+
+At this stage, the main implementation is working.
+
+Completed parts:
+
+- project folder structure,
+- local tools,
+- Gemini API integration,
+- command-line execution,
+- Markdown report generation,
+- automated tests,
+- GitHub repository.
+
+The next step is to improve the documentation, prepare deployment instructions, and add more testing details for the next submission stage.

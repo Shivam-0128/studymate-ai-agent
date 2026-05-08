@@ -1,0 +1,7 @@
+Artificial Intelligence is a branch of computer science that focuses on creating systems that can perform tasks that usually require human intelligence.
+
+Machine learning is a part of artificial intelligence. It allows computers to learn from data and improve their performance without being directly programmed for every situation.
+
+Supervised learning uses labeled data. Unsupervised learning finds hidden patterns in data without labels.
+
+Students should understand the difference between artificial intelligence, machine learning, supervised learning, and unsupervised learning.
